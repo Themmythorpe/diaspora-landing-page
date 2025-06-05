@@ -6,13 +6,14 @@ const plans = [
     id: 1,
     name: 'Mama & Papa 360',
     price: 200,
-    period: 'Per Annum'
+    period: '6 Months',
+    period2: '12 Months',
   },
   {
     id: 2,
     name: 'Mama Papa Health Visit',
-    price: 22,
-    period: 'month'
+    price: 60,
+    period: '2 month trial',
   },
 ];
 
@@ -45,12 +46,10 @@ const ChoosePlanPage = () => {
     <div className="min-h-screen bg-[#FFF9F2] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <h1 className="text-3xl font-bold text-[#0A4B35] text-center mb-8">Choose a Plan</h1>
-        
+
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Choose a Plan
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Choose a Plan</label>
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -65,7 +64,12 @@ const ChoosePlanPage = () => {
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
 
@@ -78,7 +82,8 @@ const ChoosePlanPage = () => {
                       onClick={() => handlePlanSelect(plan)}
                       className="w-full px-4 py-3 text-left hover:bg-gray-50 focus:outline-none first:rounded-t-lg last:rounded-b-lg"
                     >
-                      {plan.name} ({plan.price}$ {plan.period === 'month' ? 'Per Month' : plan.period})
+                      {plan.name} ({plan.price}${' '}
+                      {plan.period === 'month' ? 'Per Month' : plan.period})
                     </button>
                   ))}
                 </div>
@@ -88,7 +93,7 @@ const ChoosePlanPage = () => {
 
           {/* Duration Counter - Only show for monthly plans */}
           {selectedPlan && selectedPlan.period === 'month' && (
-            <div className='border-b border-gray-300 mb-6'>
+            <div className="border-b border-gray-300 mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Duration of Plan
               </label>
@@ -117,28 +122,34 @@ const ChoosePlanPage = () => {
             <div className="flex justify-between items-center">
               <span className="text-gray-700 font-medium">Total</span>
               <span className="text-[#0A4B35] font-semibold">
-                ${calculateTotal()} 
+                ${calculateTotal()}
                 <span className="text-sm text-gray-500 ml-1">
-                  ({selectedPlan.period === 'month' ? `${duration} month${duration > 1 ? 's' : ''}` : selectedPlan.period})
+                  (
+                  {selectedPlan.period === 'month'
+                    ? `${duration} month${duration > 1 ? 's' : ''}`
+                    : selectedPlan.period}
+                  )
                 </span>
               </span>
             </div>
           )}
 
           <button
-            onClick={() => navigate('/plan-details', {
-              state: {
-                plan: {
-                  name: selectedPlan.name,
-                  duration: duration,
-                  total: calculateTotal()
-                }
-              }
-            })}
+            onClick={() =>
+              navigate('/plan-details', {
+                state: {
+                  plan: {
+                    name: selectedPlan.name,
+                    duration: duration,
+                    total: calculateTotal(),
+                  },
+                },
+              })
+            }
             disabled={!selectedPlan}
             className={`w-full py-3 rounded-lg font-medium transition-colors ${
-              selectedPlan 
-                ? 'bg-[#28A745] text-white hover:bg-[#218838]' 
+              selectedPlan
+                ? 'bg-[#28A745] text-white hover:bg-[#218838]'
                 : 'bg-gray-200 text-gray-500 cursor-not-allowed'
             }`}
           >
@@ -147,9 +158,13 @@ const ChoosePlanPage = () => {
 
           <p className="text-sm text-center text-gray-600">
             By continuing, you accept our{' '}
-            <Link to="/terms" className="text-[#28A745] hover:underline">Terms of use</Link>
-            {' '}and{' '}
-            <Link to="/privacy" className="text-[#28A745] hover:underline">Privacy Policy</Link>
+            <Link to="/terms" className="text-[#28A745] hover:underline">
+              Terms of use
+            </Link>{' '}
+            and{' '}
+            <Link to="/privacy" className="text-[#28A745] hover:underline">
+              Privacy Policy
+            </Link>
           </p>
         </div>
       </div>
@@ -157,4 +172,4 @@ const ChoosePlanPage = () => {
   );
 };
 
-export default ChoosePlanPage; 
+export default ChoosePlanPage;

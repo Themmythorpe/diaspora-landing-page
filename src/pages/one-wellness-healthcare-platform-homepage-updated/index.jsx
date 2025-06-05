@@ -19,13 +19,14 @@ import PricingSection from './components/PricingSection';
 import FAQSection from './components/FAQSection';
 import DiscoveryCallSection from './components/DiscoveryCallSection';
 import BookingConfirmedSection from './components/BookingConfirmedSection';
+import PricingMp from './components/PricingMp';
 
 const OneWellnessHealthcarePlatformHomepageUpdated = () => {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       <Routes>
-        <Route 
-          path="/" 
+        <Route
+          path="/"
           element={
             <>
               <main>
@@ -40,13 +41,14 @@ const OneWellnessHealthcarePlatformHomepageUpdated = () => {
                 <PlansSection /> */}
                 <TestimonialsSection />
                 <StepsSection />
-                <PricingSection />
+                {/* <PricingSection /> */}
+                <PricingMp />
                 <DiscoveryCallSection />
                 <ClosingCTASection />
                 <FAQSection />
               </main>
             </>
-          } 
+          }
         />
         <Route path="/booking-confirmed" element={<BookingConfirmedSection />} />
       </Routes>
