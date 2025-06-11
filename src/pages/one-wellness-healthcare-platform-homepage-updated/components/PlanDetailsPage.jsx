@@ -94,7 +94,7 @@ const PlanDetailsPage = () => {
               </div>
 
               <button
-                onClick={() => navigate('/payment', { state: { plan } })}
+                onClick={() => window.open('https://buy.stripe.com/dR63cB3nngM25tSaEF', '_blank')}
                 className="w-full bg-[#28A745] text-white py-3 px-6 rounded-lg font-medium hover:bg-[#218838] transition-colors"
               >
                 Proceed to Pay

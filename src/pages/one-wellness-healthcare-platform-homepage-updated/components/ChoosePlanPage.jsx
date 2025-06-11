@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { PlansAPI } from '@/all-plans/api';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 const ChoosePlanPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,12 +37,25 @@ const ChoosePlanPage = () => {
         }));
 
         setPlans(transformedPlans);
+
+        // If we have a pre-selected plan from the previous page
+        if (location.state?.selectedPlan) {
+          const { id, duration } = location.state.selectedPlan;
+          const matchingPlan = transformedPlans.find(p => p.id === id);
+          if (matchingPlan) {
+            setSelectedPlan(matchingPlan);
+            const matchingDuration = matchingPlan.durations.find(d => d.id === duration.id);
+            if (matchingDuration) {
+              setSelectedDuration(matchingDuration);
+            }
+          }
+        }
       } catch (err) {
         console.error('API Error:', err);
         setError(err.message || 'Failed to load plans');
 
         // Fallback data with proper structure
-        setPlans([
+        const fallbackPlans = [
           {
             id: 40,
             name: 'Mama & Papa 360',
@@ -67,14 +81,28 @@ const ChoosePlanPage = () => {
               '10% medication discount',
             ],
           },
-        ]);
+        ];
+        setPlans(fallbackPlans);
+
+        // If we have a pre-selected plan from the previous page
+        if (location.state?.selectedPlan) {
+          const { id, duration } = location.state.selectedPlan;
+          const matchingPlan = fallbackPlans.find(p => p.id === id);
+          if (matchingPlan) {
+            setSelectedPlan(matchingPlan);
+            const matchingDuration = matchingPlan.durations.find(d => d.id === duration.id);
+            if (matchingDuration) {
+              setSelectedDuration(matchingDuration);
+            }
+          }
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchPlans();
-  }, []);
+  }, [location.state]);
 
   const handlePlanSelect = (plan) => {
     setSelectedPlan(plan);

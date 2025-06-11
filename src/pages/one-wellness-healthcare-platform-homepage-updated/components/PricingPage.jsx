@@ -24,7 +24,7 @@ const PricingPage = () => {
   const annualPlan = {
     price: "200",
     period: "Annual Plan",
-    title: "Mama Papa Health Cover",
+    title: "Mama Papa 360",
     description: "A comprehensive health insurance plan designed to meet the unique needs of elderly individuals aged 65 to 85.",
     features: [
       "Everything in the Mama Papa Health Visit plus",

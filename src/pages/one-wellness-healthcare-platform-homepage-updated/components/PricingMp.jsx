@@ -55,7 +55,7 @@ const PricingMp = () => {
               { id: '6months', name: '6 Months', price: '200' },
               { id: '12months', name: '12 Months', price: '350' },
             ],
-            title: 'Mama Papa Health Cover',
+            title: 'Mama Papa 360',
             description:
               'A comprehensive health insurance plan designed to meet the unique needs of elderly individuals aged 65 to 85.',
             features: [
@@ -159,7 +159,16 @@ const PricingMp = () => {
         </ul>
 
         <button
-          onClick={() => navigate('/choose-plan')}
+          onClick={() => navigate('/choose-plan', {
+            state: {
+              selectedPlan: {
+                id: plan.id,
+                title: plan.title,
+                duration: activeDuration,
+                price: activeDuration?.price
+              }
+            }
+          })}
           className="bg-[#28A745] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#218838] transition-colors w-full"
         >
           Get Started
@@ -189,11 +198,11 @@ const PricingMp = () => {
           <p className="text-gray-600 text-lg">
             Convenient and Compassionate Care for Seniors, Anytime, Anywhere.
           </p>
-          {error && (
+          {/* {error && (
             <div className="text-red-500 text-sm mt-4">
               Note: Using fallback data due to API error: {error}
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Pricing Cards Grid */}
