@@ -220,13 +220,14 @@ const ChoosePlanPage = () => {
           <button
             onClick={() => {
               if (selectedPlan && selectedDuration) {
-                navigate('/plan-details', {
+                navigate('/create-sponsor-account', {
                   state: {
-                    plan: {
-                      ...selectedPlan,
-                      duration: selectedDuration.name,
+                    selectedPlan: {
+                      id: selectedPlan.id,
+                      name: selectedPlan.name,
+                      description: selectedPlan.description,
+                      duration: selectedDuration,
                       price: selectedDuration.price,
-                      total: selectedDuration.price,
                     },
                   },
                 });

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import PhoneInputWithCountryCode from '../../../components/ui/PhoneInputWithCountryCode';
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -90,6 +91,12 @@ const SignupPage = () => {
       <div className="w-full lg:w-1/2 sm:px-4 py-12 md:px-6 lg:px-20 xl:px-24 ">
         <div className="max-w-[500px] ">
           <h1 className="text-3xl lg:text-4xl font-bold text-[#0A4B35] mb-8">Create Account</h1>
+          <p className="text-center text-sm text-gray-600 mb-6">
+            Are you a sponsor?{' '}
+            <Link to="/create-sponsor-account" className="text-[#28A745] font-semibold hover:underline">
+              Create a sponsor account
+            </Link>
+          </p>
           
           <form onSubmit={handleSubmit} className="space-y-6 w-full md:w-[450px]">
             <div>
@@ -112,22 +119,12 @@ const SignupPage = () => {
               <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
                 Phone Number
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-4">
-                  <img src="/images/us-flag.png" alt="US" className="w-auto h-5" />
-                  {/* <span className="ml-2 text-gray-500">+1</span> */}
-                </div>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="Phone number"
-                  className="w-full pl-16 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#28A745] focus:border-transparent"
-                  required
-                />
-              </div>
+              <PhoneInputWithCountryCode
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                required
+              />
             </div>
 
             <div>

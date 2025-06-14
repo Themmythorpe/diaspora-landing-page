@@ -12,6 +12,7 @@ import AddBeneficiaryPage from './pages/one-wellness-healthcare-platform-homepag
 import ChoosePlanPage from './pages/one-wellness-healthcare-platform-homepage-updated/components/ChoosePlanPage';
 import PlanDetailsPage from './pages/one-wellness-healthcare-platform-homepage-updated/components/PlanDetailsPage';
 import BookingConfirmedPage from './pages/one-wellness-healthcare-platform-homepage-updated/components/BookingConfirmedSection';
+import CreateSponsorAccountPage from './pages/one-wellness-healthcare-platform-homepage-updated/components/CreateSponsorAccountPage';
 const App = () => {
   return (
     <Router>
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/choose-plan" element={<ChoosePlanPage />} />
           <Route path="/plan-details" element={<PlanDetailsPage />} />
           <Route path="/booking-confirmed" element={<BookingConfirmedPage />} />
+          <Route path="/create-sponsor-account" element={<CreateSponsorAccountPage />} />
         </Route>
       </Routes>
     </Router>

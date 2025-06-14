@@ -1,6 +1,11 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { CheckIcon } from '@heroicons/react/24/outline';
+import { loadStripe } from '@stripe/stripe-js';
+import axios from 'axios';
+
+// Make sure to call loadStripe outside of a component's render to avoid recreating the Stripe object on every render.
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const planFeatures = {
   'Mama & Papa 360': [
@@ -23,11 +28,19 @@ const planFeatures = {
 const PlanDetailsPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const plan = location.state?.plan || {
+
+  // Ensure plan is always an object with default numeric values
+  const initialPlan = location.state?.plan || {
     name: 'Mama Papa Health Visit',
     duration: '2 Months',
     price: 60,
     total: 60,
+  };
+
+  const plan = {
+    ...initialPlan,
+    price: parseFloat(initialPlan.price) || 0,
+    total: parseFloat(initialPlan.total) || 0,
   };
 
   // Calculate monthly price for display
@@ -37,6 +50,41 @@ const PlanDetailsPage = () => {
       : plan.name === 'Mama & Papa 360' && plan.duration === '6 Months'
         ? (plan.price / 6).toFixed(2)
         : plan.price;
+
+  const handleProceedToPay = async () => {
+    if (!plan.total || isNaN(plan.total)) {
+      console.error('Invalid plan total for payment:', plan.total);
+      alert('Cannot proceed with payment: Invalid plan total.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('https://onewellapp.com/v1/create-checkout-session', {
+        planId: plan.id,
+        planName: plan.name,
+        planDuration: plan.duration,
+        amount: Math.round(plan.total * 100),
+        currency: 'usd',
+        successUrl: window.location.origin + '/payment-success',
+        cancelUrl: window.location.origin + '/plan-details',
+      });
+
+      const session = response.data;
+      const stripe = await stripePromise;
+
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (error) {
+        console.error('Stripe Checkout Error:', error.message);
+        alert(`Payment failed: ${error.message}`);
+      }
+    } catch (err) {
+      console.error('Error initiating Stripe Checkout:', err.response?.data || err.message);
+      alert(`Error: ${err.response?.data?.message || err.message || 'Could not initiate payment. Please try again.'}`);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#FFF9F2] py-32 px-4">
@@ -94,7 +142,7 @@ const PlanDetailsPage = () => {
               </div>
 
               <button
-                onClick={() => window.open('https://buy.stripe.com/dR63cB3nngM25tSaEF', '_blank')}
+                onClick={handleProceedToPay}
                 className="w-full bg-[#28A745] text-white py-3 px-6 rounded-lg font-medium hover:bg-[#218838] transition-colors"
               >
                 Proceed to Pay
