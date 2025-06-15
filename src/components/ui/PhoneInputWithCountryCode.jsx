@@ -13,7 +13,7 @@ const PhoneInputWithCountryCode = ({
   error,
 }) => {
   const [selectedCountry, setSelectedCountry] = useState(
-    countries.find(country => country.code === 'US') || countries[0] // Default to US or first country
+    countries.find(country => country.code === 'NG') || countries[0] // Default to Nigeria or first country
   );
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

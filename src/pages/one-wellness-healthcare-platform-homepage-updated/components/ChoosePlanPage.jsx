@@ -12,6 +12,7 @@ const ChoosePlanPage = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [selectedDuration, setSelectedDuration] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [beneficiaryCount, setBeneficiaryCount] = useState(1);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -26,6 +27,7 @@ const ChoosePlanPage = () => {
           id: plan.id,
           name: plan.name,
           description: plan.description || '',
+          duration: plan.durations,
           durations: (plan.plan_durations || []).map((pd) => ({
             id: pd.duration_id,
             name: (plan.durations || []).find((d) => d.id === pd.duration_id)?.name || '',
@@ -108,11 +110,19 @@ const ChoosePlanPage = () => {
     setSelectedPlan(plan);
     setSelectedDuration(plan.durations[0]);
     setIsDropdownOpen(false);
+    setBeneficiaryCount(1);
   };
 
   const handleDurationSelect = (duration) => {
     setSelectedDuration(duration);
+    setBeneficiaryCount(1);
   };
+
+  const handleBeneficiaryChange = (change) => {
+    setBeneficiaryCount((prevCount) => Math.max(1, prevCount + change));
+  };
+
+  const calculatedTotalPrice = selectedDuration ? (parseFloat(selectedDuration.price) * beneficiaryCount).toFixed(2) : '0.00';
 
   if (loading) {
     return (
@@ -193,6 +203,31 @@ const ChoosePlanPage = () => {
             </div>
           )}
 
+          {/* Beneficiary Count Section */}
+          {selectedPlan && selectedDuration && (
+            <div className="space-y-4">
+              <label className="block text-sm font-medium text-gray-700">Number of Beneficiaries</label>
+              <div className="flex items-center space-x-4">
+                <button
+                  type="button"
+                  onClick={() => handleBeneficiaryChange(-1)}
+                  disabled={beneficiaryCount <= 1}
+                  className="px-3 py-1 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  -
+                </button>
+                <span className="text-lg font-semibold text-[#0A4B35]">{beneficiaryCount}</span>
+                <button
+                  type="button"
+                  onClick={() => handleBeneficiaryChange(1)}
+                  className="px-3 py-1 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-50"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Plan Summary */}
           {selectedPlan && selectedDuration && (
             <div className="bg-[#FDF8F3] rounded-lg p-4 border border-[#FFEDD8]">
@@ -206,10 +241,16 @@ const ChoosePlanPage = () => {
                   <span className="text-gray-600">Duration:</span>
                   <span className="font-medium">{selectedDuration.name}</span>
                 </div>
+                {beneficiaryCount > 1 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Beneficiaries:</span>
+                    <span className="font-medium">{beneficiaryCount}</span>
+                  </div>
+                )}
                 <div className="flex justify-between pt-2 border-t border-[#FFEDD8]">
                   <span className="text-gray-600">Total:</span>
                   <span className="font-bold text-lg text-[#0A4B35]">
-                    ${selectedDuration.price}
+                    ${calculatedTotalPrice}
                   </span>
                 </div>
               </div>
@@ -228,6 +269,8 @@ const ChoosePlanPage = () => {
                       description: selectedPlan.description,
                       duration: selectedDuration,
                       price: selectedDuration.price,
+                      total: parseFloat(calculatedTotalPrice),
+                      beneficiaryCount: beneficiaryCount,
                     },
                   },
                 });

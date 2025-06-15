@@ -43,6 +43,16 @@ const PricingMp = () => {
           }
         });
         setActiveDurations(initialActiveDurations);
+
+        // If a pre-selected plan is passed, set its active duration
+        if (location.state?.selectedPlan?.id && location.state?.selectedPlan?.duration?.id) {
+          const { id: planId, duration: { id: durationId } } = location.state.selectedPlan;
+          setActiveDurations((prev) => ({
+            ...prev,
+            [planId]: durationId,
+          }));
+        }
+
       } catch (err) {
         console.error('API Error:', err);
         setError(err.message || 'An error occurred while fetching plans.');

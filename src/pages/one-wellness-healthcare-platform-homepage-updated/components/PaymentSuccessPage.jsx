@@ -1,8 +1,14 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const PaymentSuccessPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Extract sponsorEmail and beneficiaryCount from query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const sponsorEmail = queryParams.get('sponsorEmail');
+  const beneficiaryCount = parseInt(queryParams.get('beneficiaryCount')) || 1;
 
   return (
     <div className="min-h-screen bg-[#FFF9F2] flex items-center justify-center px-4">
@@ -19,7 +25,12 @@ const PaymentSuccessPage = () => {
           </p>
         </div>
         <button
-          onClick={() => navigate('/add-beneficiary')}
+          onClick={() => navigate('/add-beneficiary', { 
+            state: { 
+              sponsorEmail: sponsorEmail,
+              beneficiaryCount: beneficiaryCount 
+            } 
+          })}
           className="w-full bg-[#28A745] text-white py-3 px-6 rounded-lg font-medium hover:bg-[#218838] transition-colors"
         >
           Go to Beneficiary

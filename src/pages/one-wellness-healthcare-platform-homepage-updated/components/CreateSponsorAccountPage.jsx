@@ -38,40 +38,42 @@ const CreateSponsorAccountPage = () => {
     }
 
     try {
-      // const response = await fetch('http://onewellapp.com/v1/sponsor', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     name: formData.name,
-      //     email: formData.email,
-      //     phone_number: formData.phone,
-      //     plan_id: selectedPlan.id,
-      //     duration_id: selectedPlan.duration.id,
-      //     price: selectedPlan.price,
-      //   }),
-      // });
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/sponsor`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone_number: formData.phone,
+          plan_id: selectedPlan.id,
+          duration_id: selectedPlan.duration.id,
+          price: selectedPlan.price,
+        }),
+      });
 
-      // if (!response.ok) {
-      //   const errorData = await response.json();
-      //   throw new Error(errorData.message || 'Failed to create sponsor account.');
-      // }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create sponsor account.');
+      }
 
-      // const result = await response.json();
-      // console.log('Sponsor Account Creation Success:', result);
+      const result = await response.json();
+      console.log('Sponsor Account Creation Success:', result);
 
-      // Redirect to plan-details page, passing the full plan details
+      // Redirect to plan-details page after sponsor account creation
       navigate('/plan-details', {
         state: {
           plan: {
             id: selectedPlan.id,
             name: selectedPlan.name,
             description: selectedPlan.description,
-            duration: selectedPlan.duration.name,
+            duration: selectedPlan.duration, // Pass the full duration object
             price: selectedPlan.price,
-            total: selectedPlan.price,
+            total: selectedPlan.total,
+            beneficiaryCount: selectedPlan.beneficiaryCount,
           },
+          sponsorEmail: formData.email, // Pass the sponsor email
         },
       });
 

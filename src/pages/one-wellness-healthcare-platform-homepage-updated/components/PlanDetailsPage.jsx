@@ -32,22 +32,25 @@ const PlanDetailsPage = () => {
   // Ensure plan is always an object with default numeric values
   const initialPlan = location.state?.plan || {
     name: 'Mama Papa Health Visit',
-    duration: '2 Months',
+    duration: { id: '2months', name: '2 Months', price: '60' },
     price: 60,
     total: 60,
+    beneficiaryCount: 1,
   };
+  const sponsorEmail = location.state?.sponsorEmail;
 
   const plan = {
     ...initialPlan,
     price: parseFloat(initialPlan.price) || 0,
     total: parseFloat(initialPlan.total) || 0,
+    beneficiaryCount: initialPlan.beneficiaryCount || 1,
   };
 
   // Calculate monthly price for display
   const monthlyPrice =
-    plan.name === 'Mama & Papa 360' && plan.duration === '12 Months'
+    plan.name === 'Mama & Papa 360' && plan.duration.name === '12 Months'
       ? (plan.price / 12).toFixed(2)
-      : plan.name === 'Mama & Papa 360' && plan.duration === '6 Months'
+      : plan.name === 'Mama & Papa 360' && plan.duration.name === '6 Months'
         ? (plan.price / 6).toFixed(2)
         : plan.price;
 
@@ -59,14 +62,25 @@ const PlanDetailsPage = () => {
     }
 
     try {
-      const response = await axios.post('https://onewellapp.com/v1/create-checkout-session', {
+      const successRedirectUrl = window.location.origin + '/payment-success' + 
+        (sponsorEmail ? `?sponsorEmail=${sponsorEmail}` : '') + 
+        `&beneficiaryCount=${plan.beneficiaryCount}`;
+
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/create-checkout-session`, {
         planId: plan.id,
         planName: plan.name,
         planDuration: plan.duration,
         amount: Math.round(plan.total * 100),
         currency: 'usd',
-        successUrl: window.location.origin + '/payment-success',
+        successUrl: successRedirectUrl,
         cancelUrl: window.location.origin + '/plan-details',
+        metadata: {
+          plan_id: plan.id,
+          plan_name: plan.name,
+          duration_id: plan.duration.id,
+          beneficiary_count: plan.beneficiaryCount,
+          sponsor_email: sponsorEmail,
+        },
       });
 
       const session = response.data;
@@ -129,9 +143,9 @@ const PlanDetailsPage = () => {
                     <span className="font-semibold text-[#0A4B35]">{plan.name}</span>
                   </div>
 
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between">
                     <span className="text-gray-600">Duration:</span>
-                    <span className="font-semibold text-[#0A4B35]">{plan.duration}</span>
+                    <span className="font-semibold text-[#0A4B35]">{plan.duration.name}</span>
                   </div>
 
                   <div className="flex justify-between items-center pt-4 border-t border-gray-200">

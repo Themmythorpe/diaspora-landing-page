@@ -1,7 +1,16 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import PhoneInputWithCountryCode from '../../../components/ui/PhoneInputWithCountryCode';
+import InputField from '../../../components/ui/InputField';
+import Button from '../../../components/ui/Button';
+import Toast from '../../../components/ui/Toast';
 
-const BeneficiaryForm = ({ index, onRemove, isRemovable }) => {
+const BeneficiaryForm = ({ index, onRemove, isRemovable, formData, onChange, states = [], lgas = {} }) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    onChange(index, name, value);
+  };
+
   return (
     <div className="space-y-6">
       {index > 0 && (
@@ -31,8 +40,12 @@ const BeneficiaryForm = ({ index, onRemove, isRemovable }) => {
           </label>
           <input
             type="text"
+            name="firstName"
+            value={formData[index]?.firstName || ''}
+            onChange={handleInputChange}
             placeholder="Beneficiary first name"
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#28A745] focus:border-transparent"
+            required
           />
         </div>
 
@@ -42,8 +55,12 @@ const BeneficiaryForm = ({ index, onRemove, isRemovable }) => {
           </label>
           <input
             type="text"
+            name="lastName"
+            value={formData[index]?.lastName || ''}
+            onChange={handleInputChange}
             placeholder="Beneficiary last name"
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#28A745] focus:border-transparent"
+            required
           />
         </div>
       </div>
@@ -55,8 +72,12 @@ const BeneficiaryForm = ({ index, onRemove, isRemovable }) => {
           </label>
           <input
             type="date"
+            name="dateOfBirth"
+            value={formData[index]?.dateOfBirth || ''}
+            onChange={handleInputChange}
             placeholder="Beneficiary date of birth"
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#28A745] focus:border-transparent"
+            required
           />
         </div>
 
@@ -65,7 +86,11 @@ const BeneficiaryForm = ({ index, onRemove, isRemovable }) => {
             Gender
           </label>
           <select
+            name="gender"
+            value={formData[index]?.gender || ''}
+            onChange={handleInputChange}
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#28A745] focus:border-transparent"
+            required
           >
             <option value="">Select gender</option>
             <option value="male">Male</option>
@@ -79,16 +104,12 @@ const BeneficiaryForm = ({ index, onRemove, isRemovable }) => {
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Phone Number
         </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-4">
-            <img src="/images/us-flag.png" alt="US" className="w-10" />
-          </div>
-          <input
-            type="tel"
-            placeholder="Beneficiary phone number"
-            className="w-full pl-16 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#28A745] focus:border-transparent"
-          />
-        </div>
+        <PhoneInputWithCountryCode
+          name="phoneNumber"
+          value={formData[index]?.phoneNumber || ''}
+          onChange={handleInputChange}
+          required
+        />
       </div>
 
       <div>
@@ -97,8 +118,12 @@ const BeneficiaryForm = ({ index, onRemove, isRemovable }) => {
         </label>
         <input
           type="text"
+          name="address"
+          value={formData[index]?.address || ''}
+          onChange={handleInputChange}
           placeholder="Enter full home address"
           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#28A745] focus:border-transparent"
+          required
         />
       </div>
 
@@ -108,12 +133,18 @@ const BeneficiaryForm = ({ index, onRemove, isRemovable }) => {
             State*
           </label>
           <select
+            name="state"
+            value={formData[index]?.state || ''}
+            onChange={handleInputChange}
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#28A745] focus:border-transparent"
+            required
           >
-            <option value="">Enter beneficiary State</option>
-            <option value="lagos">Lagos</option>
-            <option value="abuja">Abuja</option>
-            {/* Add more states as needed */}
+            <option value="">Select State</option>
+            {Array.isArray(states) && states.map((state) => (
+              <option key={state.id} value={state.id}>
+                {state.name}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -122,10 +153,19 @@ const BeneficiaryForm = ({ index, onRemove, isRemovable }) => {
             LGA
           </label>
           <select
+            name="lga"
+            value={formData[index]?.lga || ''}
+            onChange={handleInputChange}
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#28A745] focus:border-transparent"
+            required
+            disabled={!formData[index]?.state}
           >
-            <option value="">Enter beneficiary LGA</option>
-            {/* Add LGA options based on selected state */}
+            <option value="">Select LGA</option>
+            {Array.isArray(lgas[formData[index]?.state]) && lgas[formData[index]?.state].map((lga) => (
+              <option key={lga.id} value={lga.id}>
+                {lga.name}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -137,6 +177,9 @@ const BeneficiaryForm = ({ index, onRemove, isRemovable }) => {
           </label>
           <input
             type="text"
+            name="preExistingCondition"
+            value={formData[index]?.preExistingCondition || ''}
+            onChange={handleInputChange}
             placeholder="If yes, state Condition"
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#28A745] focus:border-transparent"
           />
@@ -148,8 +191,12 @@ const BeneficiaryForm = ({ index, onRemove, isRemovable }) => {
           </label>
           <input
             type="tel"
+            name="emergencyContact"
+            value={formData[index]?.emergencyContact || ''}
+            onChange={handleInputChange}
             placeholder="Enter phone number"
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#28A745] focus:border-transparent"
+            required
           />
         </div>
       </div>
@@ -159,16 +206,177 @@ const BeneficiaryForm = ({ index, onRemove, isRemovable }) => {
 
 const AddBeneficiaryPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { beneficiaryCount: maxBeneficiaries = 1, sponsorEmail } = location.state || {};
+  
   const [beneficiaryCount, setBeneficiaryCount] = useState(1);
   const [beneficiaries, setBeneficiaries] = useState([0]); // Array of indices
+  const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('error');
+  const [states, setStates] = useState([]);
+  const [lgas, setLgas] = useState({});
+  const [loadingStates, setLoadingStates] = useState(true);
+  const [loadingLgas, setLoadingLgas] = useState({});
+
+  // Fetch states on component mount
+  useEffect(() => {
+    const fetchStates = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/states`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch states');
+        }
+        const result = await response.json();
+        // Access the states array from the data property
+        setStates(Array.isArray(result.data) ? result.data : []);
+      } catch (err) {
+        console.error('Error fetching states:', err);
+        setError('Failed to load states. Please refresh the page.');
+        setStates([]); // Set empty array on error
+      } finally {
+        setLoadingStates(false);
+      }
+    };
+
+    fetchStates();
+  }, []);
+
+  // Fetch LGAs when state changes
+  const fetchLgas = async (stateId) => {
+    if (!stateId) return;
+    
+    setLoadingLgas(prev => ({ ...prev, [stateId]: true }));
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/states/${stateId}/lgas`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch LGAs');
+      }
+      const result = await response.json();
+      // Access the LGAs array from the data property
+      setLgas(prev => ({ ...prev, [stateId]: Array.isArray(result.data) ? result.data : [] }));
+    } catch (err) {
+      console.error('Error fetching LGAs:', err);
+      setError('Failed to load LGAs. Please try selecting the state again.');
+      setLgas(prev => ({ ...prev, [stateId]: [] })); // Set empty array on error
+    } finally {
+      setLoadingLgas(prev => ({ ...prev, [stateId]: false }));
+    }
+  };
+
+  const handleInputChange = (index, name, value) => {
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [index]: {
+          ...prev[index],
+          [name]: value
+        }
+      };
+
+      // If state is changed, fetch LGAs and clear LGA selection
+      if (name === 'state') {
+        fetchLgas(value);
+        newData[index].lga = ''; // Clear LGA when state changes
+      }
+
+      return newData;
+    });
+  };
 
   const addBeneficiary = () => {
-    setBeneficiaries([...beneficiaries, beneficiaryCount]);
-    setBeneficiaryCount(beneficiaryCount + 1);
+    if (beneficiaries.length < maxBeneficiaries) {
+      setBeneficiaries([...beneficiaries, beneficiaryCount]);
+      setBeneficiaryCount(beneficiaryCount + 1);
+    }
   };
 
   const removeBeneficiary = (index) => {
     setBeneficiaries(beneficiaries.filter(i => i !== index));
+    // Remove the form data for this beneficiary
+    setFormData(prev => {
+      const newData = { ...prev };
+      delete newData[index];
+      return newData;
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setShowToast(false);
+
+    try {
+      // Check if all required beneficiaries are added
+      if (beneficiaries.length < maxBeneficiaries) {
+        const message = `Please add all ${maxBeneficiaries} ${maxBeneficiaries === 1 ? 'beneficiary' : 'beneficiaries'} before proceeding.`;
+        setToastMessage(message);
+        setToastType('error');
+        setShowToast(true);
+        return;
+      }
+
+      // Validate all required fields
+      const requiredFields = ['firstName', 'lastName', 'dateOfBirth', 'gender', 'phoneNumber', 'address', 'state', 'lga', 'emergencyContact'];
+      const missingFields = beneficiaries.some(beneficiary => {
+        const beneficiaryData = formData[beneficiary];
+        if (!beneficiaryData) return true;
+        
+        return requiredFields.some(field => {
+          const value = beneficiaryData[field];
+          return !value || value.trim() === '';
+        });
+      });
+
+      if (missingFields) {
+        setToastMessage('Please fill in all required fields for each beneficiary. Required fields are: First Name, Last Name, Date of Birth, Gender, Phone Number, Address, State, LGA, and Emergency Contact.');
+        setToastType('error');
+        setShowToast(true);
+        return;
+      }
+
+      setLoading(true);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/add-beneficiary`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sponsor_email: sponsorEmail,
+          beneficiaries: beneficiaries.map(beneficiary => formData[beneficiary]),
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to add beneficiaries');
+      }
+
+      // Show success toast
+      setToastMessage('Beneficiaries added successfully!');
+      setToastType('success');
+      setShowToast(true);
+
+      // Navigate to success page after a short delay
+      setTimeout(() => {
+        navigate('/beneficiary-success', { 
+          state: { 
+            sponsorEmail,
+            beneficiaryCount: beneficiaries.length 
+          } 
+        });
+      }, 2000);
+
+    } catch (err) {
+      setToastMessage(err.message || 'Error adding beneficiaries');
+      setToastType('error');
+      setShowToast(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -176,35 +384,67 @@ const AddBeneficiaryPage = () => {
       <div className="container mx-auto px-4 max-w-3xl">
         <h1 className="text-3xl font-bold text-[#0A4B35] mt-16 mb-8">Add Beneficiary</h1>
         
-        <div className=" rounded-2xl py-8 px-0 md:px-8">
+        {showToast && (
+          <Toast
+            message={toastMessage}
+            type={toastType}
+            onClose={() => setShowToast(false)}
+          />
+        )}
+
+        <form onSubmit={handleSubmit} className="rounded-2xl py-8 px-0 md:px-8">
+          {error && (
+            <div className="mb-6 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          {loadingStates && (
+            <div className="mb-6 p-3 bg-blue-100 text-blue-700 rounded-lg text-sm">
+              Loading states...
+            </div>
+          )}
+
           {beneficiaries.map((index) => (
             <BeneficiaryForm
               key={index}
               index={index}
               onRemove={removeBeneficiary}
               isRemovable={beneficiaries.length > 1}
+              formData={formData}
+              onChange={handleInputChange}
+              states={states}
+              lgas={lgas}
             />
           ))}
 
           <div className="mt-8">
-            <button
-              onClick={addBeneficiary}
-              className="flex items-center gap-2 text-[#28A745] text-sm font-medium hover:text-[#218838]"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 5V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Add Beneficiary
-            </button>
+            {beneficiaries.length < maxBeneficiaries ? (
+              <button
+                type="button"
+                onClick={addBeneficiary}
+                className="flex items-center gap-2 text-[#28A745] text-sm font-medium hover:text-[#218838]"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 5V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Add Beneficiary
+              </button>
+            ) : (
+              <p className="text-sm text-gray-500">
+                Maximum number of beneficiaries ({maxBeneficiaries}) reached
+              </p>
+            )}
           </div>
 
           <div className="mt-8">
             <button
-              onClick={() => navigate('/choose-plan')}
-              className="w-full bg-[#28A745] text-white py-3 rounded-lg font-medium hover:bg-[#218838] transition-colors"
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#28A745] text-white py-3 rounded-lg font-medium hover:bg-[#218838] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Next
+              {loading ? 'Submitting...' : 'Save'}
             </button>
 
             <p className="text-sm text-center text-gray-600 mt-4">
@@ -214,7 +454,7 @@ const AddBeneficiaryPage = () => {
               <Link to="/privacy" className="text-[#28A745] hover:underline">Privacy Policy</Link>
             </p>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
