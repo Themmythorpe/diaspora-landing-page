@@ -29,7 +29,7 @@ api.interceptors.response.use(
 // Fetch plans directly (if needed elsewhere outside PlansAPI)
 export const fetchPlans = async () => {
   try {
-    const response = await api.get('http://onewellapp.com/v1/all-plans?diaspora=true');
+    const response = await api.get('https://onewellapp.com/v1/all-plans?diaspora=true');
     return response;
   } catch (error) {
     console.error('fetchPlans Error:', error);
@@ -39,5 +39,5 @@ export const fetchPlans = async () => {
 
 // Organized API methods
 export const PlansAPI = {
-  getDiasporaPlans: () => api.get('http://onewellapp.com/v1/all-plans?diaspora=true'),
+  getDiasporaPlans: () => api.get('https://onewellapp.com/v1/all-plans?diaspora=true'),
 };
