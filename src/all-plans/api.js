@@ -5,8 +5,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
+  // baseURL: API_BASE_URL,
+  // timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -29,7 +29,7 @@ api.interceptors.response.use(
 // Fetch plans directly (if needed elsewhere outside PlansAPI)
 export const fetchPlans = async () => {
   try {
-    const response = await api.get('/all-plans?diaspora=true');
+    const response = await api.get('http://onewellapp.com/v1/all-plans?diaspora=true');
     return response;
   } catch (error) {
     console.error('fetchPlans Error:', error);
@@ -39,5 +39,5 @@ export const fetchPlans = async () => {
 
 // Organized API methods
 export const PlansAPI = {
-  getDiasporaPlans: () => api.get('/all-plans?diaspora=true'),
+  getDiasporaPlans: () => api.get('http://onewellapp.com/v1/all-plans?diaspora=true'),
 };
