@@ -362,12 +362,7 @@ const AddBeneficiaryPage = () => {
 
       // Navigate to success page after a short delay
       setTimeout(() => {
-        navigate('/beneficiary-success', { 
-          state: { 
-            sponsorEmail,
-            beneficiaryCount: beneficiaries.length 
-          } 
-        });
+        navigate('/beneficiary-success');
       }, 2000);
 
     } catch (err) {
