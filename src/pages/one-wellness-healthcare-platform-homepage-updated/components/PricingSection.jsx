@@ -5,7 +5,7 @@ const mamaPapaFeatures = [
   [
     'Monthly home visits by healthcare professionals',
     'Unlimited 24/7 doctor consultations',
-    '₦10,000 Wallet Cashback on 3-month subscription',
+    '$7 Wallet Cashback on 3-month subscription',
     'Dedicated Care Partner',
   ],
   [

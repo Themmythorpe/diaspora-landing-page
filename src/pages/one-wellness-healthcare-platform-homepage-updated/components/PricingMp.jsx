@@ -71,7 +71,7 @@ const PricingMp = () => {
             features: [
               'Monthly home visits by healthcare professionals',
               'Unlimited 24/7 doctor consultations',
-              '₦10,000 Wallet cashback on 3-months subscription',
+              '$7 Wallet cashback on 3-months subscription',
               'Dedicated Care Partner',
               'Refillable wallets for chronic medications',
               'First Aid & Primary Care during visits',
