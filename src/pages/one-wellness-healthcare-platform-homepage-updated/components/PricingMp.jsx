@@ -154,7 +154,7 @@ const PricingMp = () => {
                     : 'border border-orange-200 text-[#FF6B35] hover:bg-orange-50'
                 }`}
               >
-                {duration.months || duration.name}
+                {duration.months}
               </button>
             ))}
           </div>
