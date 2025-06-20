@@ -14,6 +14,7 @@ const CreateSponsorAccountPage = () => {
     name: '',
     email: '',
     phone: '',
+    community_code: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -47,6 +48,7 @@ const CreateSponsorAccountPage = () => {
           name: formData.name,
           email: formData.email,
           phone_number: formData.phone,
+          community_code: formData.community_code,
           plan_id: selectedPlan.id,
           duration_id: selectedPlan.duration.id,
           price: selectedPlan.price,
@@ -152,6 +154,20 @@ const CreateSponsorAccountPage = () => {
                 value={formData.phone}
                 onChange={handleInputChange}
                 required
+              />
+            </div>
+            <div>
+              <label htmlFor="community_code" className="block text-sm font-medium text-gray-700 mb-1">
+                Community Code (optional)
+              </label>
+              <input
+                type="text"
+                id="community_code"
+                name="community_code"
+                value={formData.community_code}
+                onChange={handleInputChange}
+                placeholder="Enter community code if you have one"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#28A745] focus:border-transparent"
               />
             </div>
 

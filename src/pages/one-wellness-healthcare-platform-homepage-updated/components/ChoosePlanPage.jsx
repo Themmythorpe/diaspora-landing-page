@@ -28,11 +28,14 @@ const ChoosePlanPage = () => {
           name: plan.name,
           description: plan.description || '',
           duration: plan.durations,
-          durations: (plan.plan_durations || []).map((pd) => ({
-            id: pd.duration_id,
-            name: (plan.durations || []).find((d) => d.id === pd.duration_id)?.name || '',
-            price: pd.usd_amount || 0,
-          })),
+          durations: (plan.plan_durations || []).map((pd) => {
+            const durationObj = (plan.durations || []).find((d) => d.id === pd.duration_id);
+            return {
+              id: pd.duration_id,
+              name: durationObj?.months || '',
+              price: pd.usd_amount || 0,
+            };
+          }),
           features: (plan.services || []).map((service) =>
             typeof service === 'object' ? service.description || service.name : String(service)
           ),
