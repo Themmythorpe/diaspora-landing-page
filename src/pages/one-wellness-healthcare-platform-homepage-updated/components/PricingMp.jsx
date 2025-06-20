@@ -22,11 +22,15 @@ const PricingMp = () => {
           return {
             id: plan.id,
             durations:
-              plan.plan_durations?.map((pd) => ({
-                id: pd.duration_id,
-                name: plan.durations?.find((d) => d.id === pd.duration_id)?.name || '',
-                price: pd.usd_amount?.toString() || '0',
-              })) || [],
+              plan.plan_durations?.map((pd) => {
+                const durationObj = plan.durations?.find((d) => d.id === pd.duration_id);
+                return {
+                  id: pd.duration_id,
+                  name: durationObj?.name || '',
+                  months: durationObj?.months || '',
+                  price: pd.usd_amount?.toString() || '0',
+                };
+              }) || [],
             title: plan.name,
             description: plan.description || 'Premium healthcare plan for your loved ones',
             features: plan.services?.map((service) => service.description || service.name) || [],
@@ -150,7 +154,7 @@ const PricingMp = () => {
                     : 'border border-orange-200 text-[#FF6B35] hover:bg-orange-50'
                 }`}
               >
-                {duration.name}
+                {duration.months || duration.name}
               </button>
             ))}
           </div>
