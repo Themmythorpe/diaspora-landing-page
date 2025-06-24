@@ -2,6 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
+  // Smooth scroll handler for pricing section
+  const handleScrollToPricing = (e) => {
+    e.preventDefault();
+    const section = document.getElementById('pricing');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative min-h-screen bg-white overflow-hidden">
       <div className="container mx-auto px-4 pt-32 md:py-32">
@@ -33,6 +42,7 @@ const HeroSection = () => {
 
               <a
                 href="#pricing"
+                onClick={handleScrollToPricing}
                 className="inline-flex items-center justify-center px-8 py-4 bg-[#28A745] text-white rounded-full font-semibold hover:bg-[#218838] transition-colors duration-300"
               >
                 Check our health plans

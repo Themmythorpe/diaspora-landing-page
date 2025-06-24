@@ -20,6 +20,15 @@ const Header = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleScrollToPricing = (e) => {
+    e.preventDefault();
+    const section = document.getElementById('pricing');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-4' : 'bg-transparent py-6'}`}>
       <div className="container mx-auto px-4 lg:px-0 xl:px-6 flex gap-4 md:gap-6 justify-between items-center">
@@ -36,7 +45,7 @@ const Header = () => {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
           {/* <Link to="/" className="text-accent font-semibold text-sm hover:text-primary transition-colors duration-200">Home</Link> */}
-          <a href="#pricing" className="text-accent font-semibold text-sm hover:text-primary transition-colors duration-200">Pricing & Plans</a>
+          <a href="#pricing" onClick={handleScrollToPricing} className="text-accent font-semibold text-sm hover:text-primary transition-colors duration-200">Pricing & Plans</a>
           <a href="#testimonials" className="text-accent font-semibold text-sm hover:text-primary transition-colors duration-200">Testimonials</a>
           <a href="#faq" className="text-accent font-semibold text-sm hover:text-primary transition-colors duration-200">FAQ</a>
           <a href="#contact" className="text-accent font-semibold text-sm hover:text-primary transition-colors duration-200">Contact Us</a>
@@ -90,13 +99,13 @@ const Header = () => {
               >
                 Home
               </Link>
-              <Link 
-                to="/pricing" 
+              <a 
+                href="#pricing" 
                 className="text-accent text-sm font-semibold py-2 hover:text-primary transition-colors duration-200"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={handleScrollToPricing}
               >
                 Pricing & Plans
-              </Link>
+              </a>
               <Link 
                 to="#diaspora" 
                 className="text-accent text-sm font-semibold py-2 hover:text-primary transition-colors duration-200"
